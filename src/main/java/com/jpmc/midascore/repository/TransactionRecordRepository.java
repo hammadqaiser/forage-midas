@@ -1,4 +1,4 @@
 package com.jpmc.midascore.repository;
 
-public class TransactionRecordRepository {
+public interface TransactionRecordRepository {
 }
