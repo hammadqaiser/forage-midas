@@ -1,2 +1,2 @@
 # Midas
-Project repo for the JPMC Advanced Software Engineering Forage program
+Project is developed as part of the JPMorganChase Software Engineering Virtual Experience.
