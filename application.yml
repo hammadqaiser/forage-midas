@@ -10,5 +10,20 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
+  jpa:
+    hibernate:
+      ddl-auto: create-drop   # creates tables on startup, drops on shutdown
+    show-sql: true            # prints SQL to console — helpful for debugging
+    database-platform: org.hibernate.dialect.H2Dialect
+
+  h2:
+    console:
+      enabled: true           # lets you view DB in browser at /h2-console
+
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
 general:
   kafka-topic: trader-updates
