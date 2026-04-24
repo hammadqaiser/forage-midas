@@ -89,18 +89,23 @@ The system is designed around three core responsibilities:
 ## Key Engineering Decisions
 
 **Why Kafka for transaction ingestion?**
+
 Kafka decouples the transaction producer (frontend) from the consumer (Midas Core). If Midas Core goes down, transactions remain in the queue and are processed on recovery — no data loss. Kafka also enables horizontal scaling: multiple Midas Core instances can consume from the same topic simultaneously.
 
 **Why SQL (H2) over NoSQL?**
+
 Financial data demands ACID compliance. SQL databases guarantee that partial failures — a balance deduction without the corresponding credit — cannot persist. In financial systems, data integrity takes precedence over raw performance.
 
 **Why dependency pinning in `pom.xml`?**
+
 In regulated financial systems, builds must be reproducible. Floating versions (`latest`) risk silent behavior changes between deployments. Every dependency is locked to an exact version so the application behaves identically across all environments.
 
 **Why externalize Kafka topic to `application.yml`?**
+
 Following the 12-Factor App methodology, configuration is separated from code. The same compiled JAR can be deployed to development, staging, and production by swapping configuration — no recompilation needed.
 
 **Why `@ManyToOne` on `TransactionRecord`?**
+
 Each transaction has one sender and one recipient, but each user can appear in many transactions. A `@ManyToOne` relationship avoids duplicating user data inside every transaction record, maintaining referential integrity and enabling efficient relational queries.
 
 ---
@@ -134,34 +139,8 @@ mvn test
 mvn -Dtest=TaskOneTests test
 mvn -Dtest=TaskTwoTests test
 mvn -Dtest=TaskThreeTests test
-```
-
----
-
-## Project Structure
-
-```
-src/
-├── main/
-│   ├── java/com/jpmc/midascore/
-│   │   ├── MidasCoreApplication.java          # Spring Boot entry point
-│   │   ├── TransactionListener.java           # Kafka consumer
-│   │   ├── TransactionValidator.java          # Business rule validation
-│   │   ├── UserRepository.java                # JPA repository for Users
-│   │   ├── TransactionRecordRepository.java   # JPA repository for TransactionRecords
-│   │   └── foundation/
-│   │       ├── Transaction.java               # Kafka message domain object
-│   │       ├── TransactionRecord.java         # JPA entity for persistence
-│   │       └── User.java                      # JPA entity for users
-│   └── resources/
-│       └── application.yml                    # Externalized configuration
-└── test/
-    └── java/com/jpmc/midascore/
-        ├── TaskOneTests.java
-        ├── TaskTwoTests.java
-        ├── TaskThreeTests.java
-        ├── KafkaProducer.java                 # Test utility
-        └── FileLoader.java                    # Test utility
+mvn -Dtest=TaskFourTests test
+mvn -Dtest=TaskFiveTests test
 ```
 
 ---
